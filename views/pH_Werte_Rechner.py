@@ -35,7 +35,8 @@ if submitted:
         st.info("Die Lösung ist basisch.")
 
 if pH is not None:
-    st.slider("pH-Skala", min_value=0.0, max_value=14.0, value=(0.0, 14.0), step=pH, disabled=True)
+    st.slider("pH-Skala", min_value=0.0, max_value=14.0, value=(0.0, 14.0), step=0.1, disabled=True)
 
-progress_value = min(max(pH / 14, 0), 1) 
-st.progress(progress_value)
+if pH is not None:
+    progress_value = min(max(pH / 14, 0), 1) 
+    st.progress(progress_value)
