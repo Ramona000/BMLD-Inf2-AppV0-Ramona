@@ -5,19 +5,37 @@ st.title("pH-Rechner")
 
 st.write("Berechnet deine pH-Werte für dich.\n\nPflichtfelder sind mit einem Sternchen (*) gekennzeichnet und müssen für optimale Berechnungen ausgefüllt werden :)")
 
-typ= st.selectbox("Wähle den Lösungstyp", ["Säure", "Base"])
+pH = None 
 
-konzentration = st.number_input(
+with st.form("pH_form"):
+    typ= st.selectbox("Wähle deinen Lösungstyp", ["starke Säure", "starke Base"])
+
+    konzentration = st.number_input(
     "Konzentration (mol/L)*",
     min_value=0.000001,
     format="%.6f")
 
-if st.button("pH-Wert berechnen"):
-    if typ == "Säure":
+    submitted = st.form_submit_button("pH-Wert berechnen")
+
+if submitted:
+    if typ == "starke Säure":
         pH = -math.log10(konzentration)
-        st.write(f"Der pH-Wert der Säure beträgt: {pH:.2f}")
+        st.success(f"Der pH-Wert der Säure beträgt: {pH:.2f}")
     else:
         pOH = -math.log10(konzentration)
         pH = 14 - pOH
-        st.write(f"Der pH-Wert der Base beträgt: {pH:.2f}")
+        st.success(f"Der pH-Wert der Base beträgt: {pH:.2f}")
 
+
+    if pH < 7:
+        st.info("Die Lösung ist sauer.")
+    elif pH == 7:
+        st.info("Die Lösung ist neutral.")
+    else:
+        st.info("Die Lösung ist basisch.")
+
+if pH is not None:
+    st.slider("pH-Skala", min_value=0.0, max_value=14.0, value=(0.0, 14.0), step=pH, disabled=True)
+
+progress_value = min(max(pH / 14, 0), 1) 
+st.progress(progress_value)
